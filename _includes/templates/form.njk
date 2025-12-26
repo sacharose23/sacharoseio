@@ -1,0 +1,77 @@
+<form class="mt-10 grid grid-cols-1 gap-6 reveal" action="#" method="POST">
+  <label class="block">
+    <span class="text-sm">Your name</span>
+    <input required name="name" type="text"
+        class="mt-1 w-full rounded-lg border border-storm-900/10 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-aurora" />
+  </label>
+  <label class="block">
+    <span class="text-sm">Email</span>
+    <input required type="email" name="email"
+        class="mt-1 w-full rounded-lg border border-storm-900/10 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lightning"/>
+  </label>
+  <label class="block">
+    <span class="text-sm">Tell us about your idea</span>
+    <textarea name="message" rows="5"
+        class="mt-1 w-full rounded-lg border border-storm-900/10 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ember"></textarea>
+  </label>
+  <div class="flex items-center gap-3">
+    <button aria-label="Submit Contact Form"
+  onclick="handleSubmit(event)" class="rounded-full bg-storm-900 text-white px-5 py-2.5 hover:bg-storm-700">Send</button>
+    <p class="text-xs text-storm-700/70">Or email <a href="mailto:hello@stormclouddevelopment.com"
+          class="underline">hello@stormclouddevelopment.com</a>
+    </p>
+  </div>
+</form>
+
+<!-- Loading Popup -->
+<div id="loadingPopup" class="fixed inset-0 bg-storm-500 bg-opacity-50 hidden flex justify-center items-center">
+  <div class="p-6 max-w-sm w-full rounded-lg border shadow-md sm:p-8 bg-white border-storm-700">
+    <div class="flex justify-center items-center space-x-3">
+      <svg class="animate-spin h-5 w-5 text-storm-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <h3 class="text-lg font-medium text-storm-50">Submitting...</h3>
+    </div>
+  </div>
+</div>
+
+<script>
+  function handleSubmit(event) {
+    event.preventDefault(); // Prevent the default form submission initially
+
+    const form = event.target.closest('form'); // Reference the form
+    if (!form.checkValidity()) {
+      alert('Please fill out all required fields.'); // Alert if any required field is not filled
+      return; // Exit the function, letting the browser show HTML5 validation errors
+    }
+
+    const loadingPopup = document.getElementById('loadingPopup');
+    loadingPopup.classList.remove('hidden'); // Show loading popup
+
+    // Proceed with form submission if validation is successful
+    fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        // Keep loading visible until redirect
+        window.location.href = '/thank-you';
+      } else {
+        throw new Error('Failed to submit form.');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert('An error occurred while submitting the form. Please try again later.');
+      loadingPopup.classList.add('hidden'); // Hide only on error
+    });
+
+  }
+</script>

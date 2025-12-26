@@ -1,0 +1,1 @@
+To activate the virtual python environment, ```source myenv/bin/activate```.

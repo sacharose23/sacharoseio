@@ -1,0 +1,113 @@
+html {
+    scroll-behavior: smooth;
+}
+
+p {
+    font-weight: 300; /* Light font weight */
+    letter-spacing: 0.025em; /* tracking wide setting */
+}
+
+h1 {
+    font-weight: 300; /* Light font weight */
+    letter-spacing: 0.025em; /* tracking wide setting */
+}
+
+h2 {
+    font-weight: 500; /* Normal font weight */
+    letter-spacing: 0.050em; /* tracking wide setting */
+}
+
+h3 {
+    font-weight: 600; /* Medium font weight */
+    letter-spacing: 0.075em; /* tracking wide setting */
+}
+
+ul.list-disc > li > ul > li {
+    list-style-type: circle;
+    /* Changes the bullet style to open circles for sub-items */
+    margin-bottom: 0.5rem;
+    /* Adjusts spacing between sub-items */
+}
+
+.attraction-link {
+    font-weight: 300; /* Light font weight */
+    text-decoration-line: underline;
+    text-underline-offset: 4px;
+    color:#0ab0cb; 
+}
+
+.attraction-link:hover {
+    color: #e4c26b;
+    /* Gold color on hover */
+    text-decoration-color: #e4c26b;
+}
+
+.nav-letters {
+    letter-spacing: 1px;
+    li {
+        margin-top: -8px;
+    }
+}
+
+.underline-from-center {
+    position: relative;
+    /* Ensure the pseudo-element is positioned relative to this element */
+    display: inline-block;
+    /* Ensure the width adjusts to the text content */
+}
+
+/* Custom underline styles */
+.underline-from-center::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    /* Adjust according to your font size and spacing */
+    transform: translateX(-50%);
+    height: 2px;
+    /* Adjust thickness here */
+    width: 0;
+    background: #e4c26b;
+    /* Use the text color */
+    transition: width 0.3s ease-out;
+}
+
+.underline-from-center:hover::after {
+    width: 100%;
+    /* Full width on hover */
+}
+
+.gallery img {
+    transition: transform 0.2s;
+}
+
+.gallery img:hover {
+    transform: scale(1.05);
+}
+
+#lightbox {
+    z-index: 50;
+    /* Make sure it's above other content */
+}
+
+.close {
+    z-index: 51;
+    /* Ensure close button is above everything */
+}
+
+/* Lightbox Close Button */
+.close-button {
+    z-index: 51;
+    /* Ensure it appears above everything */
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #ccc;
+    /* Slightly change color on hover for better UX */
+}

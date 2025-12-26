@@ -1,0 +1,276 @@
+---
+layout: layouts/base.njk
+---
+
+<!-- Hero -->
+<section class="relative min-h-[60vh] flex items-center grain">
+  <div class="absolute inset-0 bg-gradient-to-b from-storm-900 via-storm-800 to-storm-900"></div>
+  
+  <div class="relative mx-auto max-w-5xl px-6 pt-28 pb-16">
+    <div class="mb-6">
+      <a href="/" class="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm">
+        ← Back to Storm Cloud
+      </a>
+    </div>
+    
+    <div class="inline-block px-3 py-1 rounded-full bg-lightning/10 border border-lightning/20 text-lightning text-sm mb-4">
+      {{ category }}
+    </div>
+    
+    <h1 class="text-4xl md:text-6xl font-bold leading-tight tracking-tight reveal">
+      {{ title }}
+    </h1>
+    
+    <p class="mt-6 text-xl text-white/80 max-w-3xl reveal">
+      {{ description }}
+    </p>
+    
+    <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl reveal">
+      {% for metric in metrics %}
+      <div>
+        <div class="text-3xl font-bold text-lightning">{{ metric.value }}</div>
+        <div class="text-sm text-white/60">{{ metric.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Visual -->
+<section class="relative -mt-16 pb-12">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl reveal">
+      {% if heroVideo %}
+        <figure class="relative">
+          <video 
+            id="heroVideo"
+            src="{{ heroVideo }}" 
+            class="w-full h-auto rounded-t-2xl" 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            controls
+          ></video>
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              const video = document.getElementById("heroVideo");
+              if (video) video.playbackRate = 0.7; // 0.5 = half speed, 0.7 = 70%, etc.
+            });
+          </script>
+          {% if heroVideoCaption %}
+            <figcaption class="text-white/60 text-sm bg-storm-900/80 backdrop-blur-sm py-3 px-4 text-center">
+              {{ heroVideoCaption }}
+            </figcaption>
+          {% endif %}
+        </figure>
+      {% elif heroImage %}
+        <img src="{{ heroImage }}" alt="{{ title }}" class="w-full h-auto">
+      {% else %}
+        <div class="aspect-[16/9] bg-gradient-to-br from-{{ gradientFrom }}/30 via-{{ gradientVia }}/20 to-{{ gradientTo }}/30 flex items-center justify-center">
+          <div class="text-white/40 text-center">
+            <svg class="w-24 h-24 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <p class="text-sm">{{ heroImagePlaceholder | default("Project screenshot") }}</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+
+<!-- The Challenge -->
+<section class="bg-white text-storm-900 py-20">
+  <div class="mx-auto max-w-4xl px-6">
+    <h2 class="text-3xl md:text-5xl font-semibold tracking-tight reveal">The Challenge</h2>
+    
+    <div class="mt-8 space-y-6 text-lg text-storm-700">
+      {{ challenge | safe }}
+      
+      {% if challengeCallout %}
+      <div class="bg-storm-900/5 rounded-xl p-6 border border-storm-900/10 reveal">
+        <p class="font-semibold text-storm-900 mb-2">{{ challengeCallout.title }}</p>
+        <p class="text-storm-700">{{ challengeCallout.text }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- The Approach -->
+<section class="bg-storm-800 text-white py-20">
+  <div class="mx-auto max-w-4xl px-6">
+    <h2 class="text-3xl md:text-5xl font-semibold tracking-tight reveal">The Approach</h2>
+    
+    <div class="mt-8 space-y-8">
+      {% for step in approach %}
+      <div class="reveal">
+        <h3 class="text-xl font-semibold text-lightning mb-3">{{ loop.index }}. {{ step.title }}</h3>
+        <p class="text-white/80">{{ step.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="mt-12 grid md:grid-cols-3 gap-6">
+      <div class="bg-storm-700/50 rounded-xl p-6 border border-white/10 reveal">
+        <div class="text-aurora text-sm font-semibold mb-2">TECH STACK</div>
+        <ul class="space-y-1 text-white/80 text-sm">
+          {% for tech in techStack %}
+          <li>• {{ tech }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      
+      <div class="bg-storm-700/50 rounded-xl p-6 border border-white/10 reveal">
+        <div class="text-aurora text-sm font-semibold mb-2">TIMELINE</div>
+        <ul class="space-y-1 text-white/80 text-sm">
+          {% for phase in timeline %}
+          <li>• {{ phase }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      
+      <div class="bg-storm-700/50 rounded-xl p-6 border border-white/10 reveal">
+        <div class="text-aurora text-sm font-semibold mb-2">TEAM</div>
+        <ul class="space-y-1 text-white/80 text-sm">
+          {% for member in team %}
+          <li>• {{ member }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Key Features -->
+<section class="bg-storm-900 text-white py-20">
+  <div class="mx-auto max-w-6xl px-6">
+    <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-12 reveal">Key Features</h2>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      {% for feature in features %}
+      <div class="bg-storm-800 rounded-xl p-6 border border-white/10 reveal">
+        <div class="w-12 h-12 rounded-full bg-{{ feature.color }}/10 flex items-center justify-center mb-4">
+          {{ feature.icon | safe }}
+        </div>
+        <h3 class="text-xl font-semibold mb-2">{{ feature.title }}</h3>
+        <p class="text-white/70">{{ feature.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section class="bg-white text-storm-900 py-20">
+  <div class="mx-auto max-w-4xl px-6">
+    <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-8 reveal">The Results</h2>
+    
+    <div class="prose prose-lg max-w-none space-y-6 text-storm-700">
+      {{ resultsIntro | safe }}
+      
+      <div class="grid md:grid-cols-2 gap-6 my-8">
+        {% for result in resultsMetrics %}
+        <div class="bg-gradient-to-br from-{{ result.gradientFrom }}/5 to-{{ result.gradientTo }}/5 rounded-xl p-6 border border-storm-900/10 reveal">
+          <div class="text-4xl font-bold text-{{ result.color }} mb-2">{{ result.value }}</div>
+          <div class="font-semibold text-storm-900 mb-1">{{ result.title }}</div>
+          <p class="text-sm text-storm-700">{{ result.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      
+      {{ resultsBody | safe }}
+      
+      {% if testimonial %}
+      <div class="bg-storm-900/5 rounded-xl p-6 border-l-4 border-lightning reveal">
+        <p class="font-semibold text-storm-900 mb-2">"{{ testimonial.quote }}"</p>
+        <p class="text-storm-700 italic">{{ testimonial.body }}</p>
+        <p class="text-sm text-storm-600 mt-3">— {{ testimonial.author }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Lessons Learned -->
+<section class="bg-storm-800 text-white py-20">
+  <div class="mx-auto max-w-4xl px-6">
+    <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-8 reveal">What We Learned</h2>
+    
+    <div class="space-y-6 text-lg text-white/80">
+      {% for lesson in lessons %}
+      <div class="border-l-2 border-{{ lesson.color }} pl-6 reveal">
+        <h3 class="font-semibold text-white mb-2">{{ lesson.title }}</h3>
+        <p>{{ lesson.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Impact & Next Steps -->
+<section class="bg-storm-900 text-white py-20">
+  <div class="mx-auto max-w-4xl px-6">
+    <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-8 reveal">Impact & What's Next</h2>
+    
+    <div class="space-y-6 text-lg text-white/80">
+      {{ impact | safe }}
+      
+      {% if nextSteps %}
+      <div class="bg-storm-800 rounded-xl p-6 border border-white/10 mt-8 reveal">
+        <h3 class="font-semibold text-lightning mb-3">Currently in Development:</h3>
+        <ul class="space-y-2 text-white/80">
+          {% for step in nextSteps %}
+          <li>• {{ step }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Social Impact Connection -->
+{% if endowment %}
+<section class="bg-white text-storm-900 py-20 border-t-4 border-lightning">
+  <div class="mx-auto max-w-4xl px-6">
+    <div class="flex items-start gap-4 mb-6 reveal">
+      <div class="w-12 h-12 rounded-full bg-lightning/20 flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-lightning" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold mb-3">Storm Cloud Endowment Impact</h3>
+        <p class="text-storm-700 mb-4">{{ endowment.description }}</p>
+        <div class="bg-storm-900/5 rounded-lg p-4 border border-storm-900/10">
+          <div class="text-2xl font-bold text-lightning mb-1">{{ endowment.amount }}</div>
+          <div class="text-sm text-storm-700">Contributed to Storm Cloud Endowment from this project</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- More Work CTA -->
+<section class="bg-storm-900 text-white py-20">
+  <div class="mx-auto max-w-4xl px-6 text-center">
+    <h2 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 reveal">
+      Ready to build something meaningful?
+    </h2>
+    <p class="text-white/70 mb-8 max-w-2xl mx-auto reveal">
+      We help small teams create systems that punch above their weight—with social impact baked in from day one.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4 reveal">
+      <a href="#contact" class="rounded-full bg-lightning text-storm-900 font-medium px-6 py-3 hover:opacity-90">
+        Start a project
+      </a>
+      <a href="/#work" class="rounded-full border border-white/25 px-6 py-3 hover:border-white/50">
+        View more work
+      </a>
+    </div>
+  </div>
+</section>
