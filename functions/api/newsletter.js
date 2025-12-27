@@ -1,59 +1,32 @@
-class HttpError extends Error {
-  status; code; details;
-  constructor(status, code, message, details) {
-    super(message);
-    this.name = "HttpError";
-    this.status = status;
-    this.code = code;
-    this.details = details;
-  }
-}
-class ValidationError extends HttpError {
-  constructor(message, details) { super(400, "VALIDATION_ERROR", message, details); this.name = "ValidationError"; }
-}
-class KVError extends HttpError {
-  constructor(message, details) { super(500, "KV_ERROR", message, details); this.name = "KVError"; }
-}
-class PostmarkError extends HttpError {
-  constructor(message, details) { super(502, "POSTMARK_ERROR", message, details); this.name = "PostmarkError"; }
-}
-
-const serializeError = (err) => {
-  const name = err?.name || "Error";
-  const message = err?.message || String(err);
-  const out = { name, message };
-  if (err instanceof HttpError) return { ...out, status: err.status, code: err.code, details: err.details };
-  return out;
-};
+const json = (obj, status = 200) =>
+  new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json" } });
 
 const safe = (v) =>
   (v == null ? "" : String(v)).replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
 
-const parseEmailAddresses = (EMAIL_ADDRESSES) => {
-  let emailAddresses = ["sacha@stormclouddevelopment.com"];
-  const raw = (EMAIL_ADDRESSES || "").trim();
-  const list = raw ? raw.split(",").map((e) => e.trim()).filter(Boolean) : [];
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const invalid = list.filter((e) => !emailRegex.test(e));
-  if (!invalid.length && list.length) emailAddresses = list;
-  return { emailAddresses, invalid };
+const saveToKV = async (STORE, data) => {
+  if (!STORE || typeof STORE.put !== "function") throw new Error("Missing KV binding STORE");
+  const email = (data && data.email ? String(data.email) : "").trim().toLowerCase();
+  const ts = new Date().toISOString();
+  const rand = (globalThis.crypto && globalThis.crypto.randomUUID ? globalThis.crypto.randomUUID() : `${Math.random()}`.slice(2));
+  const key = `newsletter/${ts}/${rand}`;
+  await STORE.put(key, JSON.stringify({ ...data, email, submitted_at: ts }), { metadata: { email } });
+  return { key };
 };
 
-const parseJsonSafely = async (request) => {
-  try { return await request.json(); }
-  catch (e) { throw new ValidationError("Invalid JSON body", { original: serializeError(e) }); }
-};
+const sendEmailPostmark = async (apiKey, data) => {
+  if (!apiKey) throw new Error("Missing POSTMARK_API_KEY");
 
-const sendEmailPostmark = async (emailAddresses, apiKey, data) => {
-  if (!apiKey) throw new PostmarkError("Missing POSTMARK_API_KEY");
-  const url = "https://api.postmarkapp.com/email";
-  const email = (data?.email || "").trim();
-  const page = (data?.page || data?.source || "sacharose.io").toString();
+  const FROM = "sacha@stormclouddevelopment.com"; // will fail until verified, but we will treat it as optional
+  const TO = "sacharoseuritis@gmail.com";
+
+  const email = (data && data.email ? String(data.email) : "").trim();
+  const page = (data && (data.page || data.source) ? String(data.page || data.source) : "sacharose.io");
   const createdAt = new Date().toISOString();
 
   const body = {
-    From: emailAddresses[0],
-    To: emailAddresses.join(","),
+    From: FROM,
+    To: TO,
     Subject: "New newsletter signup — sacharose.io",
     HtmlBody: `
       <strong>New signup</strong><br/>
@@ -66,7 +39,7 @@ const sendEmailPostmark = async (emailAddresses, apiKey, data) => {
     MessageStream: "outbound",
   };
 
-  const res = await fetch(url, {
+  const res = await fetch("https://api.postmarkapp.com/email", {
     method: "POST",
     headers: {
       "X-Postmark-Server-Token": apiKey,
@@ -77,71 +50,69 @@ const sendEmailPostmark = async (emailAddresses, apiKey, data) => {
   });
 
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new PostmarkError(`Postmark request failed (${res.status})`, { status: res.status, body: text, from: body.From, to: body.To });
+    const details = await res.text().catch(() => "");
+    const err = new Error(`Postmark failed (${res.status})`);
+    err.status = res.status;
+    err.details = details;
+    err.from = FROM;
+    err.to = TO;
+    throw err;
   }
 
   return { ok: true };
 };
 
-const saveToKV = async (STORE, data) => {
-  if (!STORE || typeof STORE.put !== "function") throw new KVError("Missing KV binding STORE");
-  const email = (data?.email || "").trim().toLowerCase();
-  const ts = new Date().toISOString();
-  const rand = globalThis.crypto?.randomUUID?.() || `${Math.random()}`.slice(2);
-  const key = `newsletter/${ts}/${rand}`;
-
-  try {
-    await STORE.put(key, JSON.stringify({ ...data, email, submitted_at: ts }), { metadata: { email } });
-  } catch (e) {
-    throw new KVError("Failed to write to KV", { key, original: serializeError(e) });
-  }
-
-  return { ok: true, key };
-};
-
 export const onRequestPost = async (context) => {
-  const { request } = context;
-  const { STORE, POSTMARK_API_KEY, EMAIL_ADDRESSES } = context.env || {};
+  const env = (context && context.env) || {};
+  const STORE = env.STORE;
+  const POSTMARK_API_KEY = env.POSTMARK_API_KEY;
 
+  let data;
   try {
-    const data = await parseJsonSafely(request);
-    const email = (data?.email || "").trim();
-    if (!email) throw new ValidationError("Email is required");
-
-    const { emailAddresses, invalid } = parseEmailAddresses(EMAIL_ADDRESSES);
-    if (invalid.length) throw new ValidationError("EMAIL_ADDRESSES contains invalid emails", { invalid });
-
-    const [emailResult, kvResult] = await Promise.allSettled([
-      sendEmailPostmark(emailAddresses, POSTMARK_API_KEY, data),
-      saveToKV(STORE, data),
-    ]);
-
-    const out = { ok: true, email: { ok: false }, kv: { ok: false } };
-
-    if (emailResult.status === "fulfilled") out.email = { ok: true };
-    else {
-      out.email = { ok: false, error: serializeError(emailResult.reason) };
-      console.error("newsletter:postmark_failed", out.email.error);
-    }
-
-    if (kvResult.status === "fulfilled") out.kv = { ok: true, key: kvResult.value.key };
-    else {
-      out.kv = { ok: false, error: serializeError(kvResult.reason) };
-      console.error("newsletter:kv_failed", out.kv.error);
-      const status = kvResult.reason instanceof HttpError ? kvResult.reason.status : 500;
-      return new Response(JSON.stringify(out), { status, headers: { "Content-Type": "application/json" } });
-    }
-
-    // 201 if both worked, 202 if KV worked but email failed (best-effort email)
-    const status = out.email.ok ? 201 : 202;
-    return new Response(JSON.stringify(out), { status, headers: { "Content-Type": "application/json" } });
-  } catch (err) {
-    const e = err instanceof HttpError ? err : new HttpError(500, "UNHANDLED_ERROR", "Error processing form data", { original: serializeError(err) });
-    console.error("newsletter:request_failed", serializeError(e));
-    return new Response(JSON.stringify({ ok: false, error: serializeError(e) }), {
-      status: e.status,
-      headers: { "Content-Type": "application/json" },
-    });
+    data = await context.request.json();
+  } catch (e) {
+    console.error("newsletter:invalid_json", e);
+    return json({ ok: false, error: "Invalid JSON" }, 400);
   }
+
+  const submittedEmail = (data && data.email ? String(data.email) : "").trim();
+  if (!submittedEmail) return json({ ok: false, error: "Email is required" }, 400);
+
+  const [kvResult, emailResult] = await Promise.allSettled([
+    saveToKV(STORE, data),
+    sendEmailPostmark(POSTMARK_API_KEY, data),
+  ]);
+
+  const kvOk = kvResult.status === "fulfilled";
+  const emailOk = emailResult.status === "fulfilled";
+
+  if (!kvOk) console.error("newsletter:kv_failed", kvResult.reason);
+  if (!emailOk) console.error("newsletter:postmark_failed", emailResult.reason);
+
+  // fail completely only if BOTH fail
+  if (!kvOk && !emailOk) {
+    return json(
+      { ok: false, error: "Newsletter signup failed", kv: { ok: false }, email: { ok: false } },
+      500
+    );
+  }
+
+  // full success
+  if (kvOk && emailOk) {
+    return json(
+      { ok: true, kv: { ok: true, key: kvResult.value.key }, email: { ok: true } },
+      201
+    );
+  }
+
+  // partial success -> warning
+  return json(
+    {
+      ok: true,
+      warning: kvOk ? "Signup saved, but email notification failed." : "Email sent, but signup could not be saved.",
+      kv: kvOk ? { ok: true, key: kvResult.value.key } : { ok: false },
+      email: emailOk ? { ok: true } : { ok: false },
+    },
+    202
+  );
 };
