@@ -8,16 +8,16 @@
     <meta name="description" content="{{ description or site.description }}">
     <link rel="canonical" href={{ site.url + url }}/>
     <link rel="stylesheet" href="/styles.css">
-    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg"> 
-    <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    {# <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">  #}
+    {# <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32"> #}
+    {# <link rel="apple-touch-icon" href="/img/apple-touch-icon.png"> #}
   </head>
 
 
-  <body class="bg-storm-900 text-white font-display selection:bg-aurora/30">
+  <body class="">
 
     <!-- Mobile Menu -->
-    <div id="menu" class="hidden fixed z-40 top-16 right-0 w-full sm:w-1/2 md:w-1/3 text-slate-900 bg-slate-50 flex flex-col py-8 text-3xl text-left shadow-lg">
+    {# <div id="menu" class="hidden fixed z-40 top-16 right-0 w-full sm:w-1/2 md:w-1/3 text-slate-900 bg-slate-50 flex flex-col py-8 text-3xl text-left shadow-lg">
       <button id="closeMenu" class="absolute top-4 right-4 text-4xl focus:outline-none">
         &times;
       </button>
@@ -35,14 +35,13 @@
           </svg>
         </a>
       </div>
-    </div>
+    </div> #}
 
-    <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-sm bg-storm-900/30">
+    {# <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-sm bg-storm-900/30">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16 items-center justify-between">
+        <div class="flex h-48 items-center justify-between">
           <a href="/" class="flex items-center gap-2 font-mono text-sm tracking-wide uppercase text-lightning">
-            <img src="/img/favicon.svg" alt="Storm Cloud icon" class="h-6 w-6">
-            Storm Cloud
+            <img src="/img/logo.png" alt="logo" class="h-6 w-6">
           </a>
 
 
@@ -70,14 +69,14 @@
       </div>
 
  
-    </header>
+    </header> #}
 
     {{ content | safe }}
 
     {% include "templates/footer.njk" %}
 
   <!-- JavaScript -->
-<script>
+{# <script>
   function closeMenu() {
     var menu = document.getElementById('menu');
     var menuBtn = document.getElementById('menuBtn');
@@ -117,7 +116,7 @@
   document.querySelectorAll('#menu a').forEach(function(link) {
     link.addEventListener('click', closeMenu);
   });
-  </script>
+  </script> #}
   <!-- /JavaScript -->
 
   </body>

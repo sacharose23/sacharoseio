@@ -14,7 +14,7 @@ const modules = { pageSubExtension: ".page" };
 const json = { pageSubExtension: ".page" };
 
 const site = lume(
-  { location: new URL("https://stormclouddevelopment.com/") },
+  { location: new URL("https://sacharose.io/") },
   { modules, json },
 );
 
@@ -31,64 +31,48 @@ site.data("isDevEnv", Deno.env.get("PROD") === "true");
 site.use(tailwindcss({
   extensions: [".html", ".njk"],
   options: {
-    content: ['./**/*.{html,js}'],
+    content: ["./**/*.{html,njk,js,ts}"],
     theme: {
       extend: {
         colors: {
-          storm: { 900: '#0B0E12', 800: '#11151B', 700: '#1A202A' },
-          lightning: '#18D5FF', ember: '#FF4D4D', aurora: '#9B5CFF',
+          neutral: {
+            950: "#1F1F1F",
+            900: "#2B2B2B",
+            800: "#3A3A3A",
+            700: "#4A4A4A",
+            300: "#D7D1CA",
+            200: "#CFC9C2",
+            150: "#B7B0A8",
+            100: "#EDEAE6",
+            50: "#F3EFE9",
+          },
+          moon: {
+            blue: "#A9C4FF",
+            coral: "#FF8B82",
+            green: "#6FBFA6",
+          },
+          earth: {
+            clay: "#8A6F5A",
+            wood: "#6F6A63",
+          },
+
+          // keep your original accents if you still use them elsewhere
+          green: "#0b8a6f",
+          blue: "#265ba4",
+          pink: "#ef8484",
         },
         fontFamily: {
-          display: ['ui-sans-serif', 'system-ui', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-          mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace']
+          display: ["ui-sans-serif", "system-ui", "Inter", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+          mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
         },
-        boxShadow: { soft: '0 10px 40px -12px rgba(0,0,0,0.35)' }
-      }
+        boxShadow: {
+          soft: "0 10px 40px -12px rgba(0,0,0,0.35)",
+        },
+      },
     },
-    // theme: {
-    //   colors: {
-    //     "current": "currentColor",
-    //     "primary": "#e4c26b",    // Gold - for rustic and cozy elements
-    //     "accent": "#468189",     // Deep Teal - for a calming, lake-inspired tone
-    //     "secondary": "#2a120c",  // Dark brown - good for text
-    //     "black": "#2B2B2B",      // Soft Black - for text and strong contrast elements
-    //     "gray": {
-    //       "50": "#F7F6F2",
-    //       "100": "#ECE8E1",
-    //       "200": "#DDD7C8",
-    //       "300": "#C5BAA2",
-    //       "400": "#A7997E",
-    //       "500": "#8A716A",
-    //       "600": "#6F5B56",
-    //       "700": "#564641",
-    //       "800": "#3E302C",
-    //       "900": "#28211F"
-    //     },
-    //     "slate": {
-    //       "50": "#F8FAFC", // background-color: rgb(248 250 252);
-    //       "100": "#F1F5F9", // background-color: rgb(241 245 249);
-    //       "200": "#E2E8F0", // background-color: rgb(226 232 240);
-    //       "300": "#CBD5E1", // background-color: rgb(203 213 225);
-    //       "400": "#94A3B8", // background-color: rgb(148 163 184);
-    //       "500": "#64748B", // background-color: rgb(100 116 139);
-    //       "600": "#475569", // background-color: rgb(71 85 105);
-    //       "700": "#334155", // background-color: rgb(51 65 85);
-    //       "800": "#1E293B", // background-color: rgb(30 41 59);
-    //       "900": "#0F172A", // background-color: rgb(15 23 42);
-    //       "950": "#020617", // background-color: rgb(2 6 23);
-    //     },
-    //     "green": "#6A8E46",     // Forest Green - to highlight nature and outdoor activities
-    //     "beige": "#F4E3C7",     // Soft Beige - for backgrounds and neutral areas
-    //     "red": "#B5383F"        // Warm Red - for inviting and energetic accents
-    //   },
-    //   fontFamily: {
-    //     heading: ['Oswald', 'sans-serif'],
-    //     body: ['Open Sans', 'sans-serif'],
-    //   },
-    // },
   },
-},
-));
+}));
+
 
 site
   .ignore("README.md", "functions")
