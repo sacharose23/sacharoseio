@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json" } });
 
@@ -8,7 +10,7 @@ const saveToKV = async (STORE, data) => {
   if (!STORE || typeof STORE.put !== "function") throw new Error("Missing KV binding STORE");
   const email = (data && data.email ? String(data.email) : "").trim().toLowerCase();
   const ts = new Date().toISOString();
-  const rand = (globalThis.crypto && globalThis.crypto.randomUUID ? globalThis.crypto.randomUUID() : `${Math.random()}`.slice(2));
+  const rand = globalThis.crypto?.randomUUID?.() || `${Math.random()}`.slice(2);
   const key = `newsletter/${ts}/${rand}`;
   await STORE.put(key, JSON.stringify({ ...data, email, submitted_at: ts }), { metadata: { email } });
   return { key };
@@ -17,7 +19,7 @@ const saveToKV = async (STORE, data) => {
 const sendEmailPostmark = async (apiKey, data) => {
   if (!apiKey) throw new Error("Missing POSTMARK_API_KEY");
 
-  const FROM = "sacha@stormclouddevelopment.com"; // will fail until verified, but we will treat it as optional
+  const FROM = "sacha@stormclouddevelopment.com";
   const TO = "sacharoseuritis@gmail.com";
 
   const email = (data && data.email ? String(data.email) : "").trim();
@@ -58,12 +60,10 @@ const sendEmailPostmark = async (apiKey, data) => {
     err.to = TO;
     throw err;
   }
-
-  return { ok: true };
 };
 
 export const onRequestPost = async (context) => {
-  const env = (context && context.env) || {};
+  const env = context?.env || {};
   const STORE = env.STORE;
   const POSTMARK_API_KEY = env.POSTMARK_API_KEY;
 
@@ -89,23 +89,14 @@ export const onRequestPost = async (context) => {
   if (!kvOk) console.error("newsletter:kv_failed", kvResult.reason);
   if (!emailOk) console.error("newsletter:postmark_failed", emailResult.reason);
 
-  // fail completely only if BOTH fail
   if (!kvOk && !emailOk) {
-    return json(
-      { ok: false, error: "Newsletter signup failed", kv: { ok: false }, email: { ok: false } },
-      500
-    );
+    return json({ ok: false, error: "Newsletter signup failed", kv: { ok: false }, email: { ok: false } }, 500);
   }
 
-  // full success
   if (kvOk && emailOk) {
-    return json(
-      { ok: true, kv: { ok: true, key: kvResult.value.key }, email: { ok: true } },
-      201
-    );
+    return json({ ok: true, kv: { ok: true, key: kvResult.value.key }, email: { ok: true } }, 201);
   }
 
-  // partial success -> warning
   return json(
     {
       ok: true,
