@@ -1,5 +1,4 @@
 <form class="grid grid-cols-1 gap-6" onsubmit="handleSubmit(event)">
-
   <label class="block text-left">
     <span class="font-mono text-xs uppercase tracking-[0.25em] text-neutral-900">
       Email address
@@ -23,54 +22,54 @@
   >
     Join the newsletter
   </button>
-
 </form>
 
-
-<!-- Loading Popup -->
-<div id="loadingPopup" class="fixed inset-0 bg-storm-500 bg-opacity-50 hidden flex justify-center items-center">
-  <div class="p-6 max-w-sm w-full rounded-lg border shadow-md sm:p-8 bg-white border-storm-700">
-    <div class="flex justify-center items-center space-x-3">
-      <svg class="animate-spin h-5 w-5 text-storm-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <h3 class="text-lg font-medium text-storm-700">Joining…</h3>
+<!-- Loading Popup (Brutalist) -->
+<div id="loadingPopup" class="fixed inset-0 hidden items-center justify-center bg-white/90">
+  <div class="w-full max-w-sm border-4 border-neutral-900 bg-white p-6 shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
+    <div class="flex items-center gap-4">
+      <span class="inline-block h-4 w-4 bg-blue border-2 border-neutral-900"></span>
+      <span class="font-mono text-xs uppercase tracking-[0.25em] text-neutral-900">Joining…</span>
     </div>
+
+    <div class="mt-4 h-2 w-full border-2 border-neutral-900 bg-white">
+      <div class="h-full w-2/3 bg-green"></div>
+    </div>
+
+    <p class="mt-4 text-sm text-neutral-900">
+      One moment.
+    </p>
   </div>
 </div>
 
 <script>
   function handleSubmit(event) {
     event.preventDefault();
-
     const form = event.target;
-    if (!form.checkValidity()) {
-      alert('Please enter a valid email address.');
-      return;
-    }
+    if (!form.checkValidity()) { alert('Please enter a valid email address.'); return; }
 
     const loadingPopup = document.getElementById('loadingPopup');
     loadingPopup.classList.remove('hidden');
+    loadingPopup.classList.add('flex');
 
     fetch('/api/newsletter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: form.email.value
+        email: form.email.value,
+        page: location.pathname
       })
     })
-    .then(response => {
-      if (response.ok) {
-        window.location.href = '/thank-you';
-      } else {
-        throw new Error('Newsletter signup failed.');
-      }
+    .then(async (response) => {
+      if (response.ok) { window.location.href = '/thank-you'; return; }
+      const t = await response.text().catch(() => '');
+      throw new Error(`Newsletter signup failed (${response.status}): ${t}`);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       alert('Something went wrong. Please try again later.');
       loadingPopup.classList.add('hidden');
+      loadingPopup.classList.remove('flex');
     });
   }
 </script>
