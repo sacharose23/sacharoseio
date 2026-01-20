@@ -4,6 +4,8 @@
       Email address
     </span>
 
+    <input type="text" name="company" tabindex="-1" autocomplete="off" class="hidden">
+
     <input
       required
       type="email"
@@ -13,6 +15,13 @@
              focus:outline-none focus:border-blue"
     />
   </label>
+
+  <!-- Turnstile widget -->
+  <div
+    class="cf-turnstile"
+    data-sitekey="YOUR_SITE_KEY"
+    data-callback="onTurnstileSuccess">
+  </div>
 
   <button
     aria-label="Join Newsletter"
@@ -43,49 +52,45 @@
 </div>
 
 <script>
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const form = event.target;
-    if (!form.checkValidity()) { alert("Please enter a valid email address."); return; }
+  let turnstileToken=null;
+  function onTurnstileSuccess(token){turnstileToken=token;}
 
-    const loadingPopup = document.getElementById("loadingPopup");
+  async function handleSubmit(event){
+    event.preventDefault();
+    const form=event.target;
+
+    if(!form.checkValidity()){alert("Please enter a valid email address.");return;}
+    if(!turnstileToken){alert("Verification didn’t load—refresh and try again.");return;}
+
+    const loadingPopup=document.getElementById("loadingPopup");
     loadingPopup.classList.remove("hidden");
     loadingPopup.classList.add("flex");
 
-    try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email.value, page: location.pathname })
+    try{
+      const res=await fetch("/api/newsletter",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          email:form.email.value,
+          page:location.pathname,
+          turnstileToken,
+          company:form.company?form.company.value:""
+        })
       });
 
-      // Prefer JSON so we can read {warning: "..."} on 202, but don't fail if it's not JSON
-      let payload = null;
-      try { payload = await res.json(); } catch (_) { payload = null; }
+      let payload=null;
+      try{payload=await res.json();}catch(_){}
 
-      if (res.status === 201) {
-        window.location.href = "/thank-you";
-        return;
-      }
-
-      if (res.status === 202) {
-        const warning = payload && payload.warning ? payload.warning : "Signed up, but we couldn’t complete every step.";
-        // Option A: show a quick warning, then redirect
-        // (If you hate alerts, replace with a toast/banner.)
-        alert(warning);
-        window.location.href = "/thank-you";
-        return;
-      }
-
-      // Anything else is a failure (400/500/etc.)
-      const msg = payload ? JSON.stringify(payload) : "";
-      throw new Error(`Newsletter signup failed (${res.status}) ${msg}`);
-    } catch (error) {
+      if(res.status===201||res.status===202){window.location.href="/thank-you";return;}
+      throw new Error(`Newsletter signup failed (${res.status}) ${payload?JSON.stringify(payload):""}`);
+    }catch(error){
       console.error(error);
       alert("Something went wrong. Please try again later.");
       loadingPopup.classList.add("hidden");
       loadingPopup.classList.remove("flex");
+    }finally{
+      try{if(window.turnstile)window.turnstile.reset();}catch(_){}
+      turnstileToken=null;
     }
   }
 </script>
-
