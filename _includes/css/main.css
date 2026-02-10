@@ -111,3 +111,102 @@ ul.list-disc > li > ul > li {
     color: #ccc;
     /* Slightly change color on hover for better UX */
 }
+
+/* Benefit Cards (Reno page) */
+.benefit-card {
+    transition: transform 0.2s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-4px);
+}
+
+.benefit-icon-box {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    border: 4px solid #1F1F1F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
+
+/* Individual shadow colors for each benefit */
+.benefit-card:nth-child(1) .benefit-icon-box {
+    box-shadow: 6px 6px 0 0 rgba(38, 91, 164, 1);
+}
+
+.benefit-card:nth-child(1):hover .benefit-icon-box {
+    box-shadow: 8px 8px 0 0 rgba(38, 91, 164, 1);
+}
+
+.benefit-card:nth-child(2) .benefit-icon-box {
+    box-shadow: 6px 6px 0 0 rgba(11, 138, 111, 1);
+}
+
+.benefit-card:nth-child(2):hover .benefit-icon-box {
+    box-shadow: 8px 8px 0 0 rgba(11, 138, 111, 1);
+}
+
+.benefit-card:nth-child(3) .benefit-icon-box {
+    box-shadow: 6px 6px 0 0 rgba(239, 132, 132, 1);
+}
+
+.benefit-card:nth-child(3):hover .benefit-icon-box {
+    box-shadow: 8px 8px 0 0 rgba(239, 132, 132, 1);
+}
+
+.benefit-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0.75rem;
+}
+
+/* Background color utilities for benefit icons */
+.bg-moon-blue {
+    background-color: #A9C4FF;
+}
+
+.bg-moon-green {
+    background-color: #6FBFA6;
+}
+
+.bg-moon-coral {
+    background-color: #FF8B82;
+}
+
+/* Custom Brutalist Shadow Utilities */
+.shadow-brutalist-blue {
+    box-shadow: 6px 6px 0 0 rgba(38, 91, 164, 1) !important;
+}
+
+.shadow-brutalist-blue-lg {
+    box-shadow: 8px 8px 0 0 rgba(38, 91, 164, 1) !important;
+}
+
+.shadow-brutalist-pink {
+    box-shadow: 6px 6px 0 0 rgba(239, 132, 132, 1) !important;
+}
+
+.shadow-brutalist-pink-lg {
+    box-shadow: 8px 8px 0 0 rgba(239, 132, 132, 1) !important;
+}
+
+.shadow-brutalist-green {
+    box-shadow: 6px 6px 0 0 rgba(11, 138, 111, 1) !important;
+}
+
+.shadow-brutalist-green-lg {
+    box-shadow: 8px 8px 0 0 rgba(11, 138, 111, 1) !important;
+}
+
+.shadow-brutalist-black {
+    box-shadow: 6px 6px 0 0 rgba(0, 0, 0, 1) !important;
+}
+
+.shadow-brutalist-black-lg {
+    box-shadow: 8px 8px 0 0 rgba(0, 0, 0, 1) !important;
+}

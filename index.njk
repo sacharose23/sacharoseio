@@ -2,86 +2,121 @@
 layout: layouts/home.njk
 menu:
   visible: true
-title: Sacha Rose — Under Construction
+title: Sacha Rose
 order: 0
 ---
 
 <section class="min-h-screen bg-white text-neutral-900 selection:bg-pink/30 selection:text-neutral-900">
-  <div class="mx-auto max-w-3xl px-6 py-16 md:py-24">
+  <div class="mx-auto max-w-4xl px-6 py-16 md:py-24">
 
-    <header class="flex items-start justify-between gap-6 border-b-4 border-neutral-900 pb-6">
-      <div class="text-left">
-        <p class="uppercase tracking-[0.25em] text-xs font-mono text-neutral-900">
-          Under construction
-        </p>
-        <h1 class="mt-4 text-4xl md:text-6xl font-semibold leading-[0.95] tracking-tight">
-          sacharose.io
-        </h1>
+    <!-- Header -->
+    <header class="mb-16 md:mb-20">
+      <p class="font-mono text-sm uppercase tracking-[0.25em] text-neutral-900 mb-4">
+        What's here now
+      </p>
+      <h2 class="text-3xl md:text-5xl font-semibold leading-tight mb-6">
+        A small corner of the internet—built slowly, on purpose.
+      </h2>
+      <div class="text-lg md:text-xl text-neutral-900 leading-relaxed max-w-3xl">
+        <p class="mb-4">This is a record of what's working (and what's not). A place to share the honest, messy, real parts of homeschooling. No fluff. No system to buy. Just documented practice, offered freely in case it helps lighten someone else's load.</p>
       </div>
-
-      {# <div class="hidden md:flex flex-col gap-2 items-end">
-        <span class="inline-block h-4 w-4 bg-blue border-2 border-neutral-900"></span>
-        <span class="inline-block h-4 w-4 bg-green border-2 border-neutral-900"></span>
-        <span class="inline-block h-4 w-4 bg-pink border-2 border-neutral-900"></span>
-      </div> #}
-
     </header>
 
-    <div class="mt-10 grid md:grid-cols-12 gap-8">
-      <div class="md:col-span-7 text-left">
-        <h2 class="text-2xl md:text-3xl font-semibold leading-tight">
-          A small corner of the internet—built slowly, on purpose.
-        </h2>
+    <!-- Offerings -->
+    <section id="offerings" class="mb-20 md:mb-24">
+      <h3 class="font-mono text-sm uppercase tracking-[0.25em] mb-8">Available Now</h3>
+      
+      <div class="grid gap-10 md:gap-12 mb-12">
+        <!-- Parent Vent Form -->
+        <div class="grid md:grid-cols-[120px_1fr] gap-6 items-start">
+          <div class="w-[120px] h-[120px] border-4 border-neutral-900 bg-neutral-100 shadow-brutalist-blue overflow-hidden">
+            <img src="/img/spilled-coffee.png" alt="Spilled coffee icon" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-2">Parent Vent Form</h4>
+            <p class="text-neutral-700 mb-3 leading-relaxed">Having a rough day? Week? Year? Sometimes you just need to let it out. This anonymous form is here for when you need to scream into the void. No advice. No fixing. Just space to be honest.</p>
+            <a href="https://forms.gle/ooyk67zyF23fUdL26" target="_blank" class="attraction-link">Vent here</a>
+          </div>
+        </div>
 
-        <p class="mt-5 text-lg md:text-xl text-neutral-900 leading-relaxed">
-          Notes, resources, and creations for people building a thoughtful life:
-          homeschooling rhythms, practical systems, recipes, and the occasional project log.
-        </p>
+        <!-- Pizza Dough -->
+        <div class="grid md:grid-cols-[120px_1fr] gap-6 items-start">
+          <div class="w-[120px] h-[120px] border-4 border-neutral-900 bg-neutral-100 shadow-brutalist-pink overflow-hidden">
+            <img src="/img/pizza.png" alt="Pizza icon" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-2">Same Day Pizza Dough</h4>
+            <p class="text-neutral-700 mb-3 leading-relaxed">High altitude tested (Reno elevation). Because dinner still needs to happen and sometimes pizza is the answer. Simple, reliable, no overnight rise required.</p>
+            <a href="#recipe" class="attraction-link">Get the recipe</a>
+          </div>
+        </div>
 
-        <p class="mt-6 text-neutral-900">
-          <span class="font-mono text-sm uppercase tracking-[0.2em]">Status</span>
-          <span class="ml-3 inline-block align-middle h-3 w-3 bg-green border-2 border-neutral-900"></span>
-          <span class="ml-2 font-mono text-sm">in progress</span>
-          <br>
-          <span class="font-mono text-sm text-pink">Estimated launch: January 2026</span>
-        </p>
+        <!-- Star Chart -->
+        <div class="grid md:grid-cols-[120px_1fr] gap-6 items-start">
+          <div class="w-[120px] h-[120px] border-4 border-neutral-900 bg-neutral-100 shadow-brutalist-green overflow-hidden">
+            <img src="/img/star.png" alt="Star icon" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-2">Star Chart</h4>
+            <p class="text-neutral-700 mb-3 leading-relaxed">Free downloadable star chart we actually use. Good for wondering, learning constellations, or just lying in the backyard looking up.</p>
+            <a href="#starchart" class="attraction-link">Download chart</a>
+          </div>
+        </div>
       </div>
 
-      <aside class="md:col-span-5">
-        <div class="border-4 border-neutral-900 bg-white p-6 text-left shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
-          <p class="font-mono text-xs uppercase tracking-[0.25em]">
-            Eventually, you'll find
-          </p>
+      <!-- More brewing message -->
+      <div class="border-4 border-neutral-900 bg-white p-6 shadow-[8px_8px_0_0_rgba(0,0,0,1)] text-center">
+        <p class="text-neutral-700">This is only the beginning. There's <span class="inline-block bg-moon-green text-white px-2 py-1 font-semibold">lots more brewing</span> in the background.</p>
+      </div>
+    </section>
 
-          <ul class="mt-4 space-y-3 text-neutral-900">
-            <li><span class="inline-block w-3 h-3 bg-blue border-2 border-neutral-900 mr-3"></span>Worksheets + homeschooling notes</li>
-            <li><span class="inline-block w-3 h-3 bg-green border-2 border-neutral-900 mr-3"></span>Recipes + real-life systems</li>
-            <li><span class="inline-block w-3 h-3 bg-pink border-2 border-neutral-900 mr-3"></span>Projects, experiments, small wins</li>
-            <li><span class="inline-block w-3 h-3 bg-neutral-900 border-2 border-neutral-900 mr-3"></span>Reflections meant to help</li>
-          </ul>
+    <!-- About Section -->
+    <section id="about" class="mb-20 md:mb-24">
+      <h3 class="font-mono text-sm uppercase tracking-[0.25em] mb-8">About - me and my wild gems</h3>
+      
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <!-- Photos -->
+        <div class="grid grid-cols-2 gap-4">
+          <img src="/img/beau.jpg" alt="Parent and child" class="col-span-2 w-full aspect-square object-cover border-4 border-neutral-900 shadow-brutalist-green-lg">
+          <img src="/img/bigs.jpg" alt="Kids together" class="w-full aspect-square object-cover border-4 border-neutral-900 shadow-brutalist-pink">
+          <img src="/img/family.jpg" alt="Family" class="w-full aspect-square object-cover border-4 border-neutral-900 shadow-brutalist-blue">
         </div>
-      </aside>
-    </div>
+        
+        <!-- Content -->
+        <!-- Content -->
+        <div class="text-neutral-700 space-y-5 leading-relaxed">
+          <p>I'm Sacha. I have three kids. We homeschool in Reno, NV.</p>
+          
+          <p>I was a perfect student with a strong math and stats background. Then I spent 10 years as an education hacker and super tutor—outside the system, by choice. Now I run a data strategy company and share what we're building here because I think it might lessen some suffering and add some joy to this hard, rewarding path.</p>
+          
+          <p>We homeschool because our family naturally beats to our own drum. My husband led the charge. We both knew we could provide something better for our kids based on our values. Having that control to craft their education? Liberating. Fun.</p>
+          
+          <p>My kids learn through hiking, farming, martial arts, soccer, and life. Kai reads beginner books and played his first soccer league. Rose dances through everything with wild creativity. Beau, the third-born, keeps up with both of them somehow.</p>
+          
+          <p>I question things. I lead with kindness. I bake really well (but only for people I like).</p>
+          
+          <p>This site is what's working—and what's not—for us. Take what helps. Leave the rest.</p>
+        </div>
+      </div>
+    </section>
 
-    <div class="mt-12 border-t-4 border-neutral-900 pt-8 grid md:grid-cols-12 gap-6 items-start">
-      <div class="md:col-span-6 text-left">
-        <p class="font-mono text-xs uppercase tracking-[0.25em]">Newsletter</p>
-        <p class="mt-3 text-neutral-900">
+    <!-- Newsletter -->
+    <section id="newsletter" class="border-t-4 border-neutral-900 pt-12 grid md:grid-cols-2 gap-8 items-start">
+      <div class="text-left">
+        <p class="font-mono text-sm uppercase tracking-[0.25em] mb-4">Newsletter</p>
+        <p class="text-neutral-900 mb-3">
           One email when something meaningful ships. No noise.
         </p>
-        <p class="mt-3 text-sm text-neutral-900">
+        <p class="text-sm text-neutral-900">
           <span class="underline decoration-4 decoration-blue underline-offset-4">Low volume</span>,
-          <span class="underline decoration-4 decoration-green underline-offset-4">no pressure</span>,
-          <span class="underline decoration-4 decoration-pink underline-offset-4">unsubscribe anytime</span>.
+          <span class="underline decoration-4 decoration-moon-green underline-offset-4">no pressure</span>,
+          <span class="underline decoration-4 decoration-moon-coral underline-offset-4">unsubscribe anytime</span>.
         </p>
       </div>
 
-      <div class="md:col-span-6">
-        <div class="border-4 border-neutral-900 bg-white p-4 shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
-          {% include "templates/form.njk" %}
-        </div>
+      <div class="border-4 border-neutral-900 bg-white p-6 shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
+        {% include "templates/form.njk" %}
       </div>
-    </div>
+    </section>
 
   </div>
-</section>
